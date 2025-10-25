@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contacts Manager</title>
+    <meta name="description" content="Mobile-friendly contacts manager (HTML, CSS, JS, LocalStorage)">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header container">
+      <div class="brand">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="url(#logoGradient)"/>
+          <path d="M8 8h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" fill="white"/>
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <h1>Contacts</h1>
+      </div>
+      <div class="actions">
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 1 0-.71.71l.27.28v.79l4.75 4.75a1 1 0 0 0 1.42-1.42L15.5 14Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.505 4.505 0 0 1 9.5 14Z" fill="currentColor"/></svg>
+          <input id="searchInput" type="search" placeholder="Search contacts" autocomplete="off" />
+        </div>
+        <button id="addBtn" class="btn primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
+          Add Contact
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="emptyState" class="empty hidden" aria-live="polite">
+        <div class="empty__container">
+          <div class="empty__icon">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path 
+                d="M19 12.3333V19M19 25.6667H19.0167M35.6667 19C35.6667 28.2048 28.2048 35.6667 19 35.6667C9.7953 35.6667 2.33337 28.2048 2.33337 19C2.33337 9.79527 9.7953 2.33334 19 2.33334C28.2048 2.33334 35.6667 9.79527 35.6667 19Z"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="empty__content">
+            <h2 class="empty__title">No contacts yet</h2>
+            <p class="empty__description">Add your first contact to get started.</p>
+            <button class="btn primary empty__button" id="emptyAddBtn">Create contact</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="listSection">
+        <ul id="contactList" class="grid" role="list" aria-live="polite"></ul>
+      </section>
+    </main>
+
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__panel">
+        <div class="modal__header">
+          <h2 id="modalTitle">New Contact</h2>
+          <button class="icon-btn" id="closeModalBtn" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.225 4.811a1 1 0 0 0-1.414 1.414L10.586 12l-5.775 5.775a1 1 0 1 0 1.414 1.414L12 13.414l5.775 5.775a1 1 0 0 0 1.414-1.414L13.414 12l5.775-5.775a1 1 0 0 0-1.414-1.414L12 10.586 6.225 4.811Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <form id="contactForm" novalidate>
+          <input type="hidden" id="contactId" />
+          <div class="field">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" name="fullName" type="text" placeholder="e.g., Alex Johnson" required />
+            <small class="error" id="nameError"></small>
+          </div>
+          <div class="field">
+            <label for="phone">Telephone</label>
+            <input id="phone" name="phone" type="tel" placeholder="e.g., +44 7700 900123" required />
+            <small class="error" id="phoneError"></small>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="e.g., alex@example.com" required />
+            <small class="error" id="emailError"></small>
+          </div>
+          <div class="form__actions">
+            <button type="button" class="btn" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn primary" id="saveBtn">Save</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal__backdrop" id="modalBackdrop" aria-hidden="true"></div>
+    </div>
+
+    <template id="contactItemTemplate">
+      <li class="card" data-id="">
+        <div class="card__content">
+          <div class="avatar" aria-hidden="true"></div>
+          <div class="info">
+            <div class="name"></div>
+            <div class="meta">
+             
+              <div class="">
+                <span class="dot">•</span>
+                <a class="phone" href="#"></a>
+              </div>
+              <div class="">
+                <span class="dot">•</span>
+                <a class="email" href="#"></a>
+              </div>
+              <div class="card__actions">
+                <button class="icon-btn edit" title="Edit" aria-label="Edit contact">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 17.25V20h2.75l8.1-8.1-2.75-2.75L4 17.25Zm15.71-9.96a1 1 0 0 0 0-1.41l-1.59-1.59a1 1 0 0 0-1.41 0l-1.34 1.34 2.75 2.75 1.59-1.59Z" fill="currentColor"/></svg>
+                </button>
+                <button class="icon-btn danger delete" title="Delete" aria-label="Delete contact">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 3a1 1 0 0 0-1 1v1H4a1 1 0 1 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7h1a1 1 0 1 0 0-2h-4V4a1 1 0 0 0-1-1H9Zm2 4a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V8a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v9a1 1 0 1 0 2 0V8a1 1 0 0 0-1-1Z" fill="currentColor"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+     
+      </li>
+    </template>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
