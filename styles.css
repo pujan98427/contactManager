@@ -665,7 +665,7 @@ h1,h2,h3{color:var(--heading)}
   .modal__panel {
     padding: var(--space);
     margin: var(--space-sm);
-    width: calc(100vw - 1rem);
+    width: calc(100vw - 3rem);
     max-height: 95vh;
   }
   .modal {
