@@ -13,7 +13,6 @@ const el = {
   modalTitle: document.getElementById('modalTitle'),
   modalBackdrop: document.getElementById('modalBackdrop'),
   closeModalBtn: document.getElementById('closeModalBtn'),
-  cancelBtn: document.getElementById('cancelBtn'),
   form: document.getElementById('contactForm'),
   id: document.getElementById('contactId'),
   name: document.getElementById('fullName'),
@@ -26,7 +25,6 @@ const el = {
   deleteModal: document.getElementById('deleteModal'),
   deleteModalBackdrop: document.getElementById('deleteModalBackdrop'),
   closeDeleteModalBtn: document.getElementById('closeDeleteModalBtn'),
-  cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
   confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
   deleteMessage: document.getElementById('deleteMessage'),
 };
@@ -195,13 +193,11 @@ function validateForm(){
 el.addBtn.addEventListener('click', ()=> openModal('new'));
 el.emptyAddBtn.addEventListener('click', ()=> openModal('new'));
 el.closeModalBtn.addEventListener('click', closeModal);
-el.cancelBtn.addEventListener('click', closeModal);
 el.modalBackdrop.addEventListener('click', closeModal);
 window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !el.modal.classList.contains('hidden')) closeModal(); });
 
 // Delete modal events
 el.closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
-el.cancelDeleteBtn.addEventListener('click', closeDeleteModal);
 el.deleteModalBackdrop.addEventListener('click', closeDeleteModal);
 el.confirmDeleteBtn.addEventListener('click', confirmDelete);
 window.addEventListener('keydown', (e)=>{ 
@@ -229,7 +225,6 @@ el.form.addEventListener('submit', (e)=>{
     deleteModal: el.deleteModal,
     deleteModalBackdrop: el.deleteModalBackdrop,
     closeDeleteModalBtn: el.closeDeleteModalBtn,
-    cancelDeleteBtn: el.cancelDeleteBtn,
     confirmDeleteBtn: el.confirmDeleteBtn,
     deleteMessage: el.deleteMessage
   });
