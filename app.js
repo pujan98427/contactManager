@@ -1,4 +1,4 @@
-/* Contacts Manager - Vanilla JS (ES Module) */
+/* Contacts Manager - Vanilla JS (ES Module) - v2.0 */
 const STORAGE_KEY = 'contacts_v1';
 
 const el = {
@@ -22,11 +22,19 @@ const el = {
   nameError: document.getElementById('nameError'),
   phoneError: document.getElementById('phoneError'),
   emailError: document.getElementById('emailError'),
+  // Delete modal elements
+  deleteModal: document.getElementById('deleteModal'),
+  deleteModalBackdrop: document.getElementById('deleteModalBackdrop'),
+  closeDeleteModalBtn: document.getElementById('closeDeleteModalBtn'),
+  cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
+  confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
+  deleteMessage: document.getElementById('deleteMessage'),
 };
 
 /** State */
 let contacts = loadContacts();
 let query = '';
+let contactToDelete = null;
 
 /** Utils */
 const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
@@ -131,11 +139,29 @@ function onUpdate(id, {name, phone, email}){
 function onDelete(id){
   const c = contacts.find(x=>x.id===id);
   if(!c) return;
-  const ok = confirm(`Delete ${c.name}? This cannot be undone.`);
-  if(!ok) return;
-  contacts = contacts.filter(x=>x.id!==id);
+  contactToDelete = c;
+  el.deleteMessage.textContent = `Are you sure you want to delete "${c.name}"? This action cannot be undone.`;
+  openDeleteModal();
+}
+
+function openDeleteModal(){
+  console.log('Opening delete modal, element:', el.deleteModal);
+  el.deleteModal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal(){
+  el.deleteModal.classList.add('hidden');
+  document.body.style.overflow = '';
+  contactToDelete = null;
+}
+
+function confirmDelete(){
+  if(!contactToDelete) return;
+  contacts = contacts.filter(x=>x.id!==contactToDelete.id);
   saveContacts();
   render();
+  closeDeleteModal();
 }
 
 /** Validation */
@@ -173,6 +199,15 @@ el.cancelBtn.addEventListener('click', closeModal);
 el.modalBackdrop.addEventListener('click', closeModal);
 window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !el.modal.classList.contains('hidden')) closeModal(); });
 
+// Delete modal events
+el.closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+el.cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+el.deleteModalBackdrop.addEventListener('click', closeDeleteModal);
+el.confirmDeleteBtn.addEventListener('click', confirmDelete);
+window.addEventListener('keydown', (e)=>{ 
+  if(e.key==='Escape' && !el.deleteModal.classList.contains('hidden')) closeDeleteModal(); 
+});
+
 el.search.addEventListener('input', (e)=>{
   query = e.target.value.trim();
   render();
@@ -189,5 +224,14 @@ el.form.addEventListener('submit', (e)=>{
 
 // Initial UI
 (function init(){
+  // Debug: Check if delete modal elements exist
+  console.log('Delete modal elements:', {
+    deleteModal: el.deleteModal,
+    deleteModalBackdrop: el.deleteModalBackdrop,
+    closeDeleteModalBtn: el.closeDeleteModalBtn,
+    cancelDeleteBtn: el.cancelDeleteBtn,
+    confirmDeleteBtn: el.confirmDeleteBtn,
+    deleteMessage: el.deleteMessage
+  });
   render();
 })();
