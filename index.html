@@ -11,29 +11,34 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="app-header container">
-      <div class="brand">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="url(#logoGradient)"/>
-          <path d="M8 8h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" fill="white"/>
-          <defs>
-            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <h1>Contacts</h1>
-      </div>
-      <div class="actions">
-        <div class="search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 1 0-.71.71l.27.28v.79l4.75 4.75a1 1 0 0 0 1.42-1.42L15.5 14Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.505 4.505 0 0 1 9.5 14Z" fill="currentColor"/></svg>
-          <input id="searchInput" type="search" placeholder="Search contacts" autocomplete="off" />
+    <header class="app-header">
+      <div class="container">
+        <div class="brand-container">
+          <div class="brand">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="url(#logoGradient)"/>
+              <path d="M8 8h8v2H8V8zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" fill="white"/>
+              <defs>
+                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <h1>Contacts</h1>
+          </div>
         </div>
-        <button id="addBtn" class="btn primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
-          Add Contact
-        </button>
+        <div class="actions-container">
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 1 0-.71.71l.27.28v.79l4.75 4.75a1 1 0 0 0 1.42-1.42L15.5 14Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.505 4.505 0 0 1 9.5 14Z" fill="currentColor"/></svg>
+            <input id="searchInput" type="search" placeholder="Search contacts" autocomplete="off" />
+          </div>
+          <button id="addBtn" class="btn primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
+            Add Contact
+          </button>
+        </div>
+
       </div>
     </header>
 
@@ -96,6 +101,26 @@
         </form>
       </div>
       <div class="modal__backdrop" id="modalBackdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <div class="modal__panel">
+        <div class="modal__header">
+          <h2 id="deleteModalTitle">Delete Contact</h2>
+          <button class="icon-btn" id="closeDeleteModalBtn" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.225 4.811a1 1 0 0 0-1.414 1.414L10.586 12l-5.775 5.775a1 1 0 1 0 1.414 1.414L12 13.414l5.775 5.775a1 1 0 0 0 1.414-1.414L13.414 12l5.775-5.775a1 1 0 0 0-1.414-1.414L12 10.586 6.225 4.811Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="delete__content">
+          <p id="deleteMessage">Are you sure you want to delete this contact? This action cannot be undone.</p>
+          <div class="form__actions">
+            <button type="button" class="btn" id="cancelDeleteBtn">Cancel</button>
+            <button type="button" class="btn danger" id="confirmDeleteBtn">Delete</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal__backdrop" id="deleteModalBackdrop" aria-hidden="true"></div>
     </div>
 
     <template id="contactItemTemplate">
