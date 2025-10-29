@@ -1117,6 +1117,7 @@ h1,h2,h3{color:var(--heading)}
   }
   .form__actions .btn {
     width: 100%;
+    justify-content: center;
   }
   .share-link-input-group{
     flex-direction:column;
@@ -1174,6 +1175,7 @@ html {
   .modal__panel {
     max-height: 95vh;
     margin: var(--space-sm);
+    height: 100%;
   }
   .empty {
     min-height: 200px;
