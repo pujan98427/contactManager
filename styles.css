@@ -1107,7 +1107,7 @@ h1,h2,h3{color:var(--heading)}
     padding: var(--space);
     margin: var(--space-sm);
     width: calc(100vw - 3rem);
-    max-height: 95vh;
+    max-height: 100%;
   }
   .modal {
     padding: var(--space-sm);
