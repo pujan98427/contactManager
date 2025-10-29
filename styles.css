@@ -510,6 +510,17 @@ h1,h2,h3{color:var(--heading)}
 }
 
 @media (max-width: 640px) {
+  .dark-mode-toggle-sticky{
+    position:fixed;
+    top:auto;
+    bottom:20px;
+    right:20px;
+    left:auto;
+    transform:none;
+  }
+  .dark-mode-toggle-sticky:hover{
+    transform:scale(1.1);
+  }
   .contact-card-body{
     flex-direction:column;
     align-items:center;
