@@ -32,12 +32,24 @@ const el = {
   closeDeleteModalBtn: document.getElementById('closeDeleteModalBtn'),
   confirmDeleteBtn: document.getElementById('confirmDeleteBtn'),
   deleteMessage: document.getElementById('deleteMessage'),
+  // Share view modal elements
+  shareViewModal: document.getElementById('shareViewModal'),
+  shareViewModalBackdrop: document.getElementById('shareViewModalBackdrop'),
+  closeShareViewModalBtn: document.getElementById('closeShareViewModalBtn'),
+  shareViewName: document.getElementById('shareViewName'),
+  shareViewPhone: document.getElementById('shareViewPhone'),
+  shareViewEmail: document.getElementById('shareViewEmail'),
+  shareViewPhoto: document.getElementById('shareViewPhoto'),
+  shareViewId: document.getElementById('shareViewId'),
+  // Theme controls
+  darkModeToggle: document.getElementById('darkModeToggle'),
 };
 
 /** State */
 let contacts = loadContacts();
 let query = '';
 let contactToDelete = null;
+let currentTheme = localStorage.getItem('theme') || 'light';
 
 /** Utils */
 const uid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
@@ -106,6 +118,12 @@ function renderItem(c){
   email.href = `mailto:${c.email}`;
   node.querySelector('.edit').addEventListener('click', ()=> openModal('edit', c));
   node.querySelector('.delete').addEventListener('click', ()=> onDelete(c.id));
+  // Make contact name clickable to open share view modal
+  const nameElement = node.querySelector('.name');
+  if(nameElement){
+    nameElement.style.cursor = 'pointer';
+    nameElement.addEventListener('click', () => openShareViewModal(c));
+  }
   return node;
 }
 
@@ -392,6 +410,23 @@ window.addEventListener('keydown', (e)=>{
   if(e.key==='Escape' && !el.deleteModal.classList.contains('hidden')) closeDeleteModal(); 
 });
 
+
+// Share view modal events
+if(el.closeShareViewModalBtn){
+  el.closeShareViewModalBtn.addEventListener('click', closeShareViewModal);
+}
+if(el.shareViewModalBackdrop){
+  el.shareViewModalBackdrop.addEventListener('click', closeShareViewModal);
+}
+window.addEventListener('keydown', (e)=>{ 
+  if(e.key==='Escape' && el.shareViewModal && !el.shareViewModal.classList.contains('hidden')) closeShareViewModal(); 
+});
+
+// Theme toggle
+if(el.darkModeToggle){
+  el.darkModeToggle.addEventListener('click', toggleTheme);
+}
+
 el.search.addEventListener('input', (e)=>{
   query = e.target.value.trim();
   render();
@@ -504,7 +539,96 @@ el.form.addEventListener('change', (e) => {
   // The listeners will be attached when modal opens via openModal function
 })();
 
+/** Theme Management */
+function initTheme(){
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateThemeIcon();
+}
+function toggleTheme(){
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  localStorage.setItem('theme', currentTheme);
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  updateThemeIcon();
+}
+function updateThemeIcon(){
+  const sunIcon = el.darkModeToggle.querySelector('.sun-icon');
+  const moonIcon = el.darkModeToggle.querySelector('.moon-icon');
+  if(currentTheme === 'dark'){
+    sunIcon.classList.add('hidden');
+    moonIcon.classList.remove('hidden');
+  } else {
+    sunIcon.classList.remove('hidden');
+    moonIcon.classList.add('hidden');
+  }
+}
+
+
+
+/** Check for shared contact on page load */
+function checkForSharedContact(){
+  const params = new URLSearchParams(window.location.search);
+  const shareData = params.get('share');
+  if(shareData){
+    try {
+      const contact = JSON.parse(atob(shareData));
+      openShareViewModal(contact);
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch(e){
+      console.error('Invalid share data');
+    }
+  }
+}
+
+/** Open Share View Modal with contact card */
+function openShareViewModal(contact){
+  // Set contact details
+  el.shareViewName.textContent = contact.name || 'Unknown';
+  
+  if(contact.phone){
+    el.shareViewPhone.textContent = contact.phone;
+    el.shareViewPhone.href = `tel:${normalizePhone(contact.phone)}`;
+  } else {
+    el.shareViewPhone.textContent = 'No phone';
+    el.shareViewPhone.href = '#';
+  }
+  
+  if(contact.email){
+    el.shareViewEmail.textContent = contact.email;
+    el.shareViewEmail.href = `mailto:${contact.email}`;
+  } else {
+    el.shareViewEmail.textContent = 'No email';
+    el.shareViewEmail.href = '#';
+  }
+  
+  // Set photo or initials
+  if(contact.photo){
+    el.shareViewPhoto.innerHTML = `<img src="${contact.photo}" alt="${contact.name}" />`;
+    el.shareViewPhoto.style.background = 'transparent';
+    el.shareViewPhoto.style.border = 'none';
+  } else {
+    el.shareViewPhoto.textContent = initials(contact.name || 'N/A');
+    el.shareViewPhoto.style.background = '';
+    el.shareViewPhoto.style.border = '';
+  }
+  
+  // Generate a short ID for display
+  const shortId = (contact.name || 'contact').substring(0, 3).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+  el.shareViewId.textContent = shortId;
+  
+  // Show modal
+  el.shareViewModal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeShareViewModal(){
+  el.shareViewModal.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
 // Initial UI
 (function init(){
+  initTheme();
+  checkForSharedContact();
   render();
 })();

@@ -48,7 +48,7 @@
           </div>
           <button id="addBtn" class="btn primary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
-            Add Contact
+            <span class="btn-text">Add Contact</span>
           </button>
         </div>
 
@@ -198,6 +198,78 @@
      
       </li>
     </template>
+
+
+    <!-- Share View Modal - Shows contact card when link is opened -->
+    <div id="shareViewModal" class="modal hidden" role="dialog" aria-modal="true">
+     
+      <div class="modal__panel share-view-modal">
+        <div class="share-card-container">
+          <div class="contact-card">
+            <button class="contact-card-close" id="closeShareViewModalBtn" aria-label="Close">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.225 4.811a1 1 0 0 0-1.414 1.414L10.586 12l-5.775 5.775a1 1 0 1 0 1.414 1.414L12 13.414l5.775 5.775a1 1 0 0 0 1.414-1.414L13.414 12l5.775-5.775a1 1 0 0 0-1.414-1.414L12 10.586 6.225 4.811Z" fill="currentColor"/></svg>
+            </button>
+            <div class="contact-card-header">
+              <div class="contact-card-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" fill="url(#cardLogoGradient)"/>
+                  <circle cx="12" cy="12" r="3" fill="white"/>
+                  <circle cx="7" cy="7" r="2" fill="white" opacity="0.9"/>
+                  <circle cx="17" cy="7" r="2" fill="white" opacity="0.9"/>
+                  <circle cx="7" cy="17" r="2" fill="white" opacity="0.9"/>
+                  <circle cx="17" cy="17" r="2" fill="white" opacity="0.9"/>
+                  <line x1="12" y1="12" x2="7" y2="7" stroke="white" stroke-width="1.5" opacity="0.6"/>
+                  <line x1="12" y1="12" x2="17" y2="7" stroke="white" stroke-width="1.5" opacity="0.6"/>
+                  <line x1="12" y1="12" x2="7" y2="17" stroke="white" stroke-width="1.5" opacity="0.6"/>
+                  <line x1="12" y1="12" x2="17" y2="17" stroke="white" stroke-width="1.5" opacity="0.6"/>
+                  <defs>
+                    <linearGradient id="cardLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#2563eb;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span class="contact-card-brand">ContactHub</span>
+              </div>
+              <div class="contact-card-type">CONTACT CARD</div>
+            </div>
+            <div class="contact-card-body">
+              <div class="contact-card-photo-container">
+                <div class="contact-card-photo" id="shareViewPhoto">
+                  <!-- Photo will be inserted here -->
+                </div>
+              </div>
+              <div class="contact-card-info">
+                <h3 class="contact-card-name" id="shareViewName"></h3>
+                <div class="contact-card-divider"></div>
+                <div class="contact-card-details">
+                  <div class="contact-card-detail-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="detail-icon"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="currentColor"/></svg>
+                    <a class="contact-card-phone" id="shareViewPhone" href="#"></a>
+                  </div>
+                  <div class="contact-card-detail-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="detail-icon"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/></svg>
+                    <a class="contact-card-email" id="shareViewEmail" href="#"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="contact-card-footer">
+              <div class="contact-card-watermark">ContactHub</div>
+              <div class="contact-card-id">ID: <span id="shareViewId"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal__backdrop" id="shareViewModalBackdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- Dark Mode Toggle - Sticky Right Side -->
+    <button id="darkModeToggle" class="dark-mode-toggle-sticky" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg class="theme-icon moon-icon hidden" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
 
     <script type="module" src="./app.js?v=2"></script>
   </body>
