@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Contacts Manager</title>
-    <meta name="description" content="Mobile-friendly contacts manager (HTML, CSS, JS, LocalStorage)">
+    <title>ContactHub - Your Contacts Manager</title>
+    <meta name="description" content="ContactHub - Mobile-friendly contacts manager (HTML, CSS, JS, LocalStorage)">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -15,23 +15,30 @@
       <div class="container">
         <div class="brand-container">
           <div class="brand">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <!-- Contact card background -->
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" fill="url(#logoGradient)"/>
-              <!-- Person/user icon -->
-              <circle cx="12" cy="9" r="2.5" fill="white"/>
-              <path d="M12 13c-2.5 0-4.5 1.5-4.5 3v1h9v-1c0-1.5-2-3-4.5-3z" fill="white"/>
-              <!-- Contact details lines -->
-              <rect x="7" y="17" width="10" height="1.5" rx="0.75" fill="white" opacity="0.8"/>
-              <rect x="7" y="19.5" width="6" height="1.5" rx="0.75" fill="white" opacity="0.6"/>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true" class="brand-logo">
+              <!-- Hub/Network base -->
+              <circle cx="12" cy="12" r="9" fill="url(#logoGradient)"/>
+              <!-- Central connection point -->
+              <circle cx="12" cy="12" r="3" fill="white"/>
+              <!-- Contact cards/icons around the hub -->
+              <circle cx="7" cy="7" r="2" fill="white" opacity="0.9"/>
+              <circle cx="17" cy="7" r="2" fill="white" opacity="0.9"/>
+              <circle cx="7" cy="17" r="2" fill="white" opacity="0.9"/>
+              <circle cx="17" cy="17" r="2" fill="white" opacity="0.9"/>
+              <!-- Connection lines -->
+              <line x1="12" y1="12" x2="7" y2="7" stroke="white" stroke-width="1.5" opacity="0.6"/>
+              <line x1="12" y1="12" x2="17" y2="7" stroke="white" stroke-width="1.5" opacity="0.6"/>
+              <line x1="12" y1="12" x2="7" y2="17" stroke="white" stroke-width="1.5" opacity="0.6"/>
+              <line x1="12" y1="12" x2="17" y2="17" stroke="white" stroke-width="1.5" opacity="0.6"/>
               <defs>
                 <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                  <stop offset="50%" style="stop-color:#2563eb;stop-opacity:1" />
                   <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
                 </linearGradient>
               </defs>
             </svg>
-            <h1>ContactMe</h1>
+            <h1>ContactHub</h1>
           </div>
         </div>
         <div class="actions-container">
@@ -65,7 +72,8 @@
           <div class="empty__content">
             <h2 class="empty__title">No contacts yet</h2>
             <p class="empty__description">Add your first contact to get started.</p>
-            <button id="addBtn" class="btn primary empty__button">
+
+            <button  class="btn primary empty__button" id="emptyAddBtn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a1 1 0 0 1 1 1v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H6a1 1 0 1 1 0-2h5V6a1 1 0 0 1 1-1Z" fill="currentColor"/></svg>
               Add Contact
             </button>

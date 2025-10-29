@@ -4,6 +4,7 @@ const STORAGE_KEY = 'contacts_v1';
 const el = {
   search: document.getElementById('searchInput'),
   addBtn: document.getElementById('addBtn'),
+  emptyAddBtn: document.getElementById('emptyAddBtn'),
   emptyState: document.getElementById('emptyState'),
   list: document.getElementById('contactList'),
   listSection: document.getElementById('listSection'),
@@ -367,7 +368,18 @@ function validateForm(){
 }
 
 /** Events */
-el.addBtn.addEventListener('click', ()=> openModal('new'));
+if(el.addBtn){
+  el.addBtn.addEventListener('click', ()=> openModal('new'));
+}
+if(el.emptyAddBtn){
+  el.emptyAddBtn.addEventListener('click', ()=> openModal('new'));
+}
+// Event delegation as backup for empty state button (works even if element is hidden initially)
+document.addEventListener('click', (e) => {
+  if(e.target.closest('#emptyAddBtn')){
+    openModal('new');
+  }
+});
 el.closeModalBtn.addEventListener('click', closeModal);
 el.modalBackdrop.addEventListener('click', closeModal);
 window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !el.modal.classList.contains('hidden')) closeModal(); });
@@ -494,13 +506,5 @@ el.form.addEventListener('change', (e) => {
 
 // Initial UI
 (function init(){
-  // Debug: Check if delete modal elements exist
-  console.log('Delete modal elements:', {
-    deleteModal: el.deleteModal,
-    deleteModalBackdrop: el.deleteModalBackdrop,
-    closeDeleteModalBtn: el.closeDeleteModalBtn,
-    confirmDeleteBtn: el.confirmDeleteBtn,
-    deleteMessage: el.deleteMessage
-  });
   render();
 })();
