@@ -518,7 +518,12 @@ h1,h2,h3{color:var(--heading)}
     padding: 32px 10px;
   }
   .modal .modal__panel.share-view-modal{
-    padding:32px 0;
+    padding:32px 10px;
+  }
+  .contact-card-close {
+    position: absolute;
+    top: -25px;
+    right: -1px;
   }
   .contact-card-photo{
     width:100px;
