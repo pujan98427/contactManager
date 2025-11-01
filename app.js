@@ -2,12 +2,15 @@
 const STORAGE_KEY = 'contacts_v1';
 
 const el = {
-  search: document.getElementById('searchInput'),
+  searchDesktop: document.getElementById('searchInputDesktop'),
+  searchMobile: document.getElementById('searchInputMobile'),
+  searchMobileContainer: document.getElementById('searchMobileContainer'),
   addBtn: document.getElementById('addBtn'),
   emptyAddBtn: document.getElementById('emptyAddBtn'),
   emptyState: document.getElementById('emptyState'),
   list: document.getElementById('contactList'),
   listSection: document.getElementById('listSection'),
+  noResultsState: document.getElementById('noResultsState'),
   tpl: document.getElementById('contactItemTemplate'),
   modal: document.getElementById('modal'),
   modalTitle: document.getElementById('modalTitle'),
@@ -74,11 +77,37 @@ function initials(name){
 function render(){
   const filtered = filterContacts(contacts, query);
   el.list.innerHTML = '';
-  if(filtered.length === 0){
+  
+  // Show/hide mobile search based on contacts existence
+  if(contacts.length > 0){
+    el.searchMobileContainer?.classList.remove('hidden');
+  } else {
+    el.searchMobileContainer?.classList.add('hidden');
+  }
+  
+  // Handle empty state (no contacts at all)
+  if(contacts.length === 0){
     el.emptyState.classList.remove('hidden');
+    el.noResultsState.classList.add('hidden');
+    el.listSection.classList.add('hidden');
+    // Clear search when no contacts
+    query = '';
+    if(el.searchDesktop) el.searchDesktop.value = '';
+    if(el.searchMobile) el.searchMobile.value = '';
     return;
   }
   el.emptyState.classList.add('hidden');
+  
+  // Handle no search results (contacts exist but search returns nothing)
+  if(query && filtered.length === 0){
+    el.noResultsState.classList.remove('hidden');
+    el.listSection.classList.add('hidden');
+    return;
+  }
+  
+  // Show results
+  el.noResultsState.classList.add('hidden');
+  el.listSection.classList.remove('hidden');
   const frag = document.createDocumentFragment();
   for(const c of filtered){
     const node = renderItem(c);
@@ -398,16 +427,26 @@ document.addEventListener('click', (e) => {
     openModal('new');
   }
 });
-el.closeModalBtn.addEventListener('click', closeModal);
-el.modalBackdrop.addEventListener('click', closeModal);
-window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !el.modal.classList.contains('hidden')) closeModal(); });
+if(el.closeModalBtn){
+  el.closeModalBtn.addEventListener('click', closeModal);
+}
+if(el.modalBackdrop){
+  el.modalBackdrop.addEventListener('click', closeModal);
+}
+window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && el.modal && !el.modal.classList.contains('hidden')) closeModal(); });
 
 // Delete modal events
-el.closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
-el.deleteModalBackdrop.addEventListener('click', closeDeleteModal);
-el.confirmDeleteBtn.addEventListener('click', confirmDelete);
+if(el.closeDeleteModalBtn){
+  el.closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+}
+if(el.deleteModalBackdrop){
+  el.deleteModalBackdrop.addEventListener('click', closeDeleteModal);
+}
+if(el.confirmDeleteBtn){
+  el.confirmDeleteBtn.addEventListener('click', confirmDelete);
+}
 window.addEventListener('keydown', (e)=>{ 
-  if(e.key==='Escape' && !el.deleteModal.classList.contains('hidden')) closeDeleteModal(); 
+  if(e.key==='Escape' && el.deleteModal && !el.deleteModal.classList.contains('hidden')) closeDeleteModal(); 
 });
 
 
@@ -427,12 +466,28 @@ if(el.darkModeToggle){
   el.darkModeToggle.addEventListener('click', toggleTheme);
 }
 
-el.search.addEventListener('input', (e)=>{
-  query = e.target.value.trim();
+// Handle search input from both desktop and mobile
+function handleSearchInput(value){
+  query = value.trim();
+  // Sync both inputs
+  if(el.searchDesktop) el.searchDesktop.value = query;
+  if(el.searchMobile) el.searchMobile.value = query;
   render();
-});
+}
 
-el.form.addEventListener('submit', async (e)=>{
+if(el.searchDesktop){
+  el.searchDesktop.addEventListener('input', (e)=>{
+    handleSearchInput(e.target.value);
+  });
+}
+if(el.searchMobile){
+  el.searchMobile.addEventListener('input', (e)=>{
+    handleSearchInput(e.target.value);
+  });
+}
+
+if(el.form){
+  el.form.addEventListener('submit', async (e)=>{
   e.preventDefault();
   if(!validateForm()) return;
   const id = el.id.value;
@@ -453,7 +508,8 @@ el.form.addEventListener('submit', async (e)=>{
   const payload = { name: el.name.value, phone: el.phone.value, email: el.email.value, photo };
   if(id){ await onUpdate(id, payload); } else { await onCreate(payload); }
   closeModal();
-});
+  });
+}
 
 let dragDropListenersAttached = false;
 
@@ -521,17 +577,21 @@ function preventDefaults(e){
   document.body.addEventListener(eventName, preventDefaults, false);
 });
 
-el.photo.addEventListener('change', (e)=>{
-  handleFileSelect(e.target.files[0]);
-});
+if(el.photo){
+  el.photo.addEventListener('change', (e)=>{
+    handleFileSelect(e.target.files[0]);
+  });
+}
 
 // Use event delegation on the form to handle file input changes
 // This ensures it works even if the input reference changes
-el.form.addEventListener('change', (e) => {
-  if(e.target && e.target.id === 'photo' && e.target.type === 'file'){
-    handleFileSelect(e.target.files[0]);
-  }
-});
+if(el.form){
+  el.form.addEventListener('change', (e) => {
+    if(e.target && e.target.id === 'photo' && e.target.type === 'file'){
+      handleFileSelect(e.target.files[0]);
+    }
+  });
+}
 
 // Initialize photo listeners on page load
 (function initPhotoListeners(){
