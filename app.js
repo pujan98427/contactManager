@@ -67,6 +67,15 @@ function normalizePhone(str){
 function isValidName(v){ return typeof v === 'string' && v.trim().length >= 2; }
 function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
 function isValidPhone(v){ return /^\+?[0-9]{7,15}$/.test(normalizePhone(v)); }
+function sortByTime(arr){ 
+  return [...arr].sort((a,b)=>{
+    // Sort by creation time (oldest first, newest at bottom)
+    // If createdAt doesn't exist, treat as 0 (oldest)
+    const timeA = a.createdAt || 0;
+    const timeB = b.createdAt || 0;
+    return timeA - timeB; // Ascending order (oldest first, newest last)
+  });
+}
 function sortByName(arr){ return [...arr].sort((a,b)=>a.name.localeCompare(b.name)); }
 function initials(name){
   const parts = (name||'').trim().split(/\s+/).slice(0,2);
@@ -116,9 +125,12 @@ function render(){
   el.list.appendChild(frag);
 }
 function filterContacts(arr, q){
-  if(!q) return sortByName(arr);
+  // Sort by time first (newest first)
+  const sorted = sortByTime(arr);
+  if(!q) return sorted;
+  // If there's a search query, filter but maintain time-based order
   const s = q.toLowerCase();
-  return sortByName(arr).filter(c=>
+  return sorted.filter(c=>
     c.name.toLowerCase().includes(s) ||
     c.email.toLowerCase().includes(s) ||
     c.phone.toLowerCase().includes(s)
@@ -348,7 +360,14 @@ async function onCreate({name, phone, email, photo}){
 async function onUpdate(id, {name, phone, email, photo}){
   const i = contacts.findIndex(c=>c.id===id);
   if(i>-1){
-    const updated = { ...contacts[i], name: name.trim(), phone: phone.trim(), email: email.trim() };
+    // Preserve createdAt so contact maintains its position in time-based sort
+    const updated = { 
+      ...contacts[i], 
+      name: name.trim(), 
+      phone: phone.trim(), 
+      email: email.trim(),
+      createdAt: contacts[i].createdAt || Date.now() // Preserve original creation time
+    };
     if(photo !== undefined){
       updated.photo = photo;
     }
