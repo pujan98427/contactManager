@@ -69,11 +69,11 @@ function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 function isValidPhone(v){ return /^\+?[0-9]{7,15}$/.test(normalizePhone(v)); }
 function sortByTime(arr){ 
   return [...arr].sort((a,b)=>{
-    // Sort by creation time (oldest first, newest at bottom)
+    // Sort by creation time (newest first)
     // If createdAt doesn't exist, treat as 0 (oldest)
     const timeA = a.createdAt || 0;
     const timeB = b.createdAt || 0;
-    return timeA - timeB; // Ascending order (oldest first, newest last)
+    return timeB - timeA; // Descending order (newest first)
   });
 }
 function sortByName(arr){ return [...arr].sort((a,b)=>a.name.localeCompare(b.name)); }
