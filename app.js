@@ -1,5 +1,6 @@
 /* Contacts Manager - Vanilla JS (ES Module) - v2.0 */
 const STORAGE_KEY = 'contacts_v1';
+const PHOTO_MAX_SIZE = 200 * 1024; // 200KB
 
 const el = {
   searchDesktop: document.getElementById('searchInputDesktop'),
@@ -288,8 +289,8 @@ function handleFileSelect(file){
     return;
   }
   
-  if(file.size > 5 * 1024 * 1024){
-    el.photoError.textContent = 'Image size should be less than 5MB.';
+  if(file.size > PHOTO_MAX_SIZE){
+    el.photoError.textContent = 'Image size should be less than 200KB.';
     return;
   }
   

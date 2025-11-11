@@ -137,7 +137,8 @@
             <small class="error" id="emailError"></small>
           </div>
           <div class="field">
-            <label for="photo">Photo</label>
+            <label for="photo">Photo(Optional)</label>
+           
             <div class="photo-upload">
               <input id="photo" name="photo" type="file" accept="image/*" style="display: none;" />
               <div class="photo-preview" id="photoPreview" data-dragover="false">
@@ -148,7 +149,7 @@
                     <path d="M12 13c-2.5 0-4.5 1.5-4.5 3v1h9v-1c0-1.5-2-3-4.5-3z" fill="currentColor" opacity="0.3"/>
                   </svg>
                   <span class="photo-placeholder">No photo</span>
-                  <span class="photo-drop-hint">Choose file or drop here</span>
+                  <span class="photo-drop-hint">Choose file or drop here (max 200&nbsp;KB)</span>
                 </div>
                 <div class="photo-actions hidden">
                   <button type="button" class="icon-btn photo-action-btn" id="changePhotoBtn" aria-label="Change photo">
@@ -161,6 +162,7 @@
               </div>
               <small class="error" id="photoError"></small>
             </div>
+            <p class="field-note">Since the total local storage limit is around 5 MB, it’s recommended to avoid using an image. If needed, please upload one smaller than 200 KB.</p>
           </div>
           <div class="form__actions">
             <button type="submit" class="btn primary" id="saveBtn">Save</button>

@@ -1023,6 +1023,15 @@ h1,h2,h3{color:var(--heading)}
   gap:6px;
   margin:var(--space) 0;
 }
+.field-note{
+  margin:0;
+  font-size:10px;
+  color:var(--text);
+  line-height:1.4;
+  background-color: var(--primary-50);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
 .field label{
   font-size:14px;
   font-weight:500;
